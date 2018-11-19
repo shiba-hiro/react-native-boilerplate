@@ -4,7 +4,7 @@ import { View } from 'react-native';
 import moment from 'moment';
 
 import store from './store';
-import OriginalDateTimePicker from './components/OriginalDateTimePicker';
+import OriginalDateTimePickerAndroid from './components/OriginalDateTimePickerAndroid';
 
 class RootContainer extends Component {
   state = {
@@ -21,7 +21,7 @@ class RootContainer extends Component {
           paddingTop: 300,
         }}
       >
-        <OriginalDateTimePicker
+        <OriginalDateTimePickerAndroid
           datetime={this.state.selectedDate}
           minimumDate={moment()}
           maximumDate={moment().add(2, 'month').endOf('month')}

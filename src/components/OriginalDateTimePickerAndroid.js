@@ -3,7 +3,7 @@ import { TouchableWithoutFeedback } from 'react-native';
 import { Text, View } from 'native-base';
 import moment from 'moment';
 
-import MinIntDateTimePicker from './MinIntDateTimePicker';
+import ModalDateTimePickerAndroid from './ModalDateTimePickerAndroid';
 
 // import l10n from '../../locales/l10n';
 
@@ -69,7 +69,7 @@ export default class extends React.Component {
             <Text primary small>{label}</Text>
           </View>
           {this._renderValue()}
-          <MinIntDateTimePicker
+          <ModalDateTimePickerAndroid
             datetime={selectedDatetime}
             isVisible={this.state.isVisible}
             locale="ja-JP" // 'en-US', 'ja-JP', l10n.getLocale()

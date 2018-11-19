@@ -3,7 +3,7 @@ import { View } from 'native-base';
 import DatePicker from 'react-native-modal-datetime-picker';
 import moment from 'moment';
 
-import TimePickerAndroid from './TimePickerAndroid';
+import LimitedMinsTimePicker from './LimitedMinsTimePicker';
 
 // type Props = {
 //   datetime: moment, // optional
@@ -87,7 +87,7 @@ export default class extends React.Component {
           minimumDate={minimumDate.toDate()}
           maximumDate={maximumDate.toDate()}
         />
-        <TimePickerAndroid
+        <LimitedMinsTimePicker
           onConfirm={(selectedTime) => this._completeProcess(selectedTime)}
           onCancel={() => this._handleCancel()}
           isVisible={this.state.isTimePickerVisible}
