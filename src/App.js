@@ -8,7 +8,7 @@ import OriginalDateTimePicker from './components/OriginalDateTimePicker';
 
 class RootContainer extends Component {
   state = {
-    selectedDate: moment(), // moment
+    selectedDate: moment().minute(0), // moment
   }
 
   render() {

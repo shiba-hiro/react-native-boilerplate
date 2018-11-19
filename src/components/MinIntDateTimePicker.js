@@ -1,6 +1,6 @@
 import React from 'react';
 import { View } from 'native-base';
-import DateTimePicker from 'react-native-modal-datetime-picker';
+import DatePicker from 'react-native-modal-datetime-picker';
 import moment from 'moment';
 
 import TimePickerAndroid from './TimePickerAndroid';
@@ -17,84 +17,79 @@ import TimePickerAndroid from './TimePickerAndroid';
 // }
 export default class extends React.Component {
   state = {
-    tempDate: null, // instance of Date which stores data in Date
+    selectedDate: null, // instance of Date which stores data in Date
     isDatePickerVisible: false, // state of the DatePicker
     isTimePickerVisible: false, // state of the TimePicker
   }
-  // constructor(props) {
-  //   super(props);
-  //   this.state = {
-  //     tempDate: null, // instance of Date which stores data in Date
-  //     isDatePickerVisible: props.isVisible || false, // state of the DatePicker
-  //     isTimePickerVisible: false, // state of the TimePicker
-  //   }
-  // }
 
-  _passToTimePicker(date) {
+  _changeToTimePicker(selectedDate) {
     this.setState({
-      tempDate: date,
+      selectedDate,
       isDatePickerVisible: false,
       isTimePickerVisible: true,
     });
   }
 
-  _handleConfirm = (selectedTime) => { // Date instance, only filled time information
-    const { tempDate } = this.state;
+  _completeProcess = (selectedTime) => { // Date instance, only filled time information
+    const { selectedDate } = this.state;
     const selectedDateTime = moment([
-      tempDate.getFullYear(),
-      tempDate.getMonth(),
-      tempDate.getDate(),
+      selectedDate.getFullYear(),
+      selectedDate.getMonth(),
+      selectedDate.getDate(),
       selectedTime.getHours(),
       selectedTime.getMinutes(),
     ]);
-    if (this._validate(selectedDateTime)) {
+    if (this._isAcceptableDate(selectedDateTime)) {
       this.setState({
+        selectedDate: null,
         isTimePickerVisible: false,
       });
-      this.props.onConfirm(selectedDateTime);
+      const { onConfirm } = this.props;
+      onConfirm(selectedDateTime);
     } else {
       console.warn('Invalid Date', selectedDateTime);
     }
   }
 
-  _validate = (selectedDateTime) => { // moment instance
+  _isAcceptableDate = (selectedDateTime) => { // moment instance
     const { invalidDays = [] } = this.props;
     return !(invalidDays.find((dt) => dt.isSame(selectedDateTime, 'day')));
+  }
+
+  _handleCancel = () => {
+    this.setState({
+      selectedDate: null,
+      isDatePickerVisible: false,
+      isTimePickerVisible: false,
+    });
+    const { onCancel } = this.props;
+    onCancel();
   }
 
 
   render() {
     const {
       datetime,
+      isVisible,
       locale,
       minimumDate,
       maximumDate,
-      onCancel, // Function, used by both DateTimePicker and TimePickerAndroid
     } = this.props;
-    // if (!datetime) {
-    //   datetime = moment();
-    // }
     return(
       <View>
-        <DateTimePicker
+        <DatePicker
           mode="date"
           date={datetime.toDate()}
-          // isVisible={this.state.isDatePickerVisible}
-          isVisible={this.props.isVisible}
-          onConfirm={(date) => this._passToTimePicker(date)}
-          onCancel={onCancel}
+          isVisible={isVisible}
+          onConfirm={(selectedDate) => this._changeToTimePicker(selectedDate)}
+          onCancel={() => this._handleCancel()}
           locale={locale}
           minimumDate={minimumDate.toDate()}
           maximumDate={maximumDate.toDate()}
         />
         <TimePickerAndroid
-          onConfirm={(date) => this._handleConfirm(date)}
-          onCancel={() => {
-            this.setState({
-              isTimePickerVisible: false,
-            });
-            onCancel();
-          }}
+          onConfirm={(selectedTime) => this._completeProcess(selectedTime)}
+          onCancel={() => this._handleCancel()}
           isVisible={this.state.isTimePickerVisible}
           hours={datetime.toDate().getHours()}
           minutes={datetime.toDate().getMinutes()}

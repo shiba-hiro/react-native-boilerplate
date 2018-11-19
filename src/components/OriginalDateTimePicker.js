@@ -1,9 +1,7 @@
 import React from 'react';
 import { TouchableWithoutFeedback } from 'react-native';
 import { Text, View } from 'native-base';
-// import DateTimePicker from 'react-native-modal-datetime-picker';
 import moment from 'moment';
-// import _ from 'lodash';
 
 import MinIntDateTimePicker from './MinIntDateTimePicker';
 
@@ -48,9 +46,9 @@ export default class extends React.Component {
     return <Text light bold>Select Date</Text>;
   }
 
-  _handleConfirm = (datetime) => {
+  _handleConfirm = (selectedDatetime) => { // moment type
     this.setState({
-      selectedDatetime: datetime,
+      selectedDatetime,
       isVisible: false,
     });
   }
@@ -77,7 +75,7 @@ export default class extends React.Component {
             locale="ja-JP" // 'en-US', 'ja-JP', l10n.getLocale()
             minimumDate={minimumDate}
             maximumDate={maximumDate}
-            onConfirm={(date) => this._handleConfirm(date)}
+            onConfirm={(datetime) => this._handleConfirm(datetime)}
             onCancel={() => this._hide()}
           />
         </View>
