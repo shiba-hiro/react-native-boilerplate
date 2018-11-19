@@ -2,7 +2,7 @@ import React from 'react';
 import {
   View,
   Text,
-  Button,
+  // Button,
   StyleSheet,
 } from 'react-native';
 import Dialog, {
@@ -13,43 +13,55 @@ import ScrollPicker from 'react-native-picker-scrollview';
 
 export default class extends React.Component {
   state = {
-    visible: false,
+    // isVisible: false,
+    hours: this.props.hours || 0,
+    minutes: this._convertMinutesToIndex(),
+  }
+
+  _convertMinutesToIndex() {
+    const { minutes } = this.props;
+    if (minutes) {
+      return minutes < 30 ? 0 : 1;
+    }
+    return 0;
+  }
+
+  _handleConfirm() {
+    const { hours, minutes } = this.state;
+    const d = new Date();
+    d.setHours(hours, minutes === 0 ? 0 : 30);
+    this.props.onConfirm(d);
   }
 
   render() {
-    return (
-      <View style={{ flex: 1 }}>
-        <View style={styles.container}>
-          <Button
-            title="Show Dialog"
-            onPress={() => {
-              this.setState({
-                visible: true,
-              });
-            }}
-          />
-        </View>
+    const {
+      // onConfirm,
+      onCancel,
+      isVisible
+    } = this.props;
+    const {
+      hours,
+      minutes,
+    } = this.state;
 
+    return (
+      <View style={styles.container}>
         <Dialog
-          onDismiss={() => {
-            this.setState({ visible: false });
-          }}
+          // onDismiss={() => {
+          //   this.setState({ isVisible: false });
+          // }}
           width={0.9}
-          visible={this.state.visible}
+          visible={isVisible}
           rounded
           actions={[
             <DialogButton
               text="CANCEL"
-              onPress={() => {
-                this.setState({ visible: false });
-              }}
+              onPress={onCancel}
               key="button-1"
             />,
             <DialogButton
               text="OK"
-              onPress={() => {
-                this.setState({ visible: false });
-              }}
+              onPress={() => this._handleConfirm()}
               key="button-2"
             />,
           ]}
@@ -59,9 +71,7 @@ export default class extends React.Component {
             justifyContent: 'center',
             alignItems: 'center',
           }}
-          onTouchOutside={() => {
-            this.setState({ visible: false });
-          }}
+          onTouchOutside={onCancel}
         >
           <DialogContent
             style={{
@@ -110,7 +120,7 @@ export default class extends React.Component {
                     '22',
                     '23',
                   ]}
-                  selectedIndex={0}
+                  selectedIndex={hours}
                   itemHeight={30}
                   wrapperHeight={75}
                   highlightColor={'#d8d8d8'}
@@ -124,6 +134,7 @@ export default class extends React.Component {
                   onValueChange={(data, selectedIndex) => {
                       console.log(data);
                       console.log(selectedIndex);
+                      this.setState({ hours: selectedIndex });
                   }}
                   style={{
                     zIndex:20,
@@ -141,7 +152,7 @@ export default class extends React.Component {
                     '00',
                     '30',
                   ]}
-                  selectedIndex={0}
+                  selectedIndex={minutes}
                   itemHeight={30}
                   wrapperHeight={75}
                   highlightColor={'#d8d8d8'}
@@ -155,6 +166,7 @@ export default class extends React.Component {
                   onValueChange={(data, selectedIndex) => {
                       console.log(data);
                       console.log(selectedIndex);
+                      this.setState({ minutes: selectedIndex });
                   }}
                   style={{
                     zIndex:20,

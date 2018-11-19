@@ -7,9 +7,11 @@
   "main": "main.js",
   "dependencies": {
     "expo": "25.0.0",
+    "native-base": "^2.8.1",
     "react": "16.2.0",
     "react-native": "github:expo/react-native#sdk-25.0.0",
     "react-native-globalize": "^1.2.3",
+    "react-native-modal-datetime-picker": "^6.0.0",
     "react-native-picker-scrollview": "^1.0.0",
     "react-native-popup-dialog": "^0.16.3",
     "react-navigation": "1.5.8",

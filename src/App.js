@@ -1,17 +1,35 @@
 import React, { Component } from 'react';
 import { Provider, connect } from 'react-redux';
+import { View } from 'react-native';
+import moment from 'moment';
 
 import store from './store';
-import TimePickerAndroid from './components/TimePickerAndroid';
+import OriginalDateTimePicker from './components/OriginalDateTimePicker';
 
 class RootContainer extends Component {
   state = {
-    visible: false,
+    selectedDate: moment(), // moment
   }
 
   render() {
     return (
-        <TimePickerAndroid />
+      <View
+        style={{
+          flex: 1,
+          alignItems: 'center',
+          justifyContent: 'center',
+          paddingTop: 300,
+        }}
+      >
+        <OriginalDateTimePicker
+          datetime={this.state.selectedDate}
+          minimumDate={moment()}
+          maximumDate={moment().add(2, 'month').endOf('month')}
+          invalidDays={[]}
+          onConfirm={date => this.setState({ selectedDate: date })}
+          label="Here is the label"
+        />
+      </View>
     );
   }
 }
