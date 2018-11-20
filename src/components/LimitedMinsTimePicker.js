@@ -21,8 +21,8 @@ const MIN_INTERVALS = {
       {
         index: 1,
         data: 30,
-        dataString: '30'
-      }
+        dataString: '30',
+      },
     ],
     convertMinutesToIndex: (minutesData) => {
       if (minutesData) {
@@ -35,6 +35,16 @@ const MIN_INTERVALS = {
 
 const HOURS_STRINGS = Array.from({ length: 24 }).map((v, i) => i.toString());
 
+const _renderNumberItems = (data, index, isSelected) => isSelected ? (
+  <View>
+      <Text style={styles.selectedNumber}>{data}</Text>
+  </View>
+  ) : (
+    <View>
+        <Text style={styles.nonSelectedNumber}>{data}</Text>
+    </View>
+  );
+
 export default class extends React.Component {
   state = {
     hoursIndex: this.props.hours || 0,
@@ -46,7 +56,9 @@ export default class extends React.Component {
     const time = new Date();
     time.setHours(
       hoursIndex,
-      MIN_INTERVALS[this.props.minuteInterval || 30].values.find((value) => value.index === minutesIndex).data,
+      MIN_INTERVALS[this.props.minuteInterval || 30].values
+        .find((value) => value.index === minutesIndex)
+        .data,
     );
     this.props.onConfirm(time);
   }
@@ -76,11 +88,17 @@ export default class extends React.Component {
               text="CANCEL"
               onPress={onCancel}
               key="button-1"
+              bordered={false}
+              textStyle={styles.actionText}
+              style={styles.actions}
             />,
             <DialogButton
               text="OK"
               onPress={() => this._completeSelectTime()}
               key="button-2"
+              bordered={false}
+              textStyle={styles.actionText}
+              style={styles.actions}
             />,
           ]}
           containerStyle={styles.dialogContainer}
@@ -91,41 +109,34 @@ export default class extends React.Component {
             style={styles.dialogContent}
           >
             <View
-              style={styles.dialogInnerView}
+              style={styles.dialogInnerPickersView}
             >
               <View
-                style={styles.PickerWrapperView}
+                style={styles.pickerWrapperView}
               >
                 <ScrollPicker
                   dataSource={HOURS_STRINGS}
                   selectedIndex={hoursIndex}
                   itemHeight={30}
                   wrapperHeight={75}
-                  highlightColor={'#d8d8d8'}
-                  renderItem={(data) => (
-                    <View>
-                        <Text >{data}</Text>
-                    </View>
-                    )
-                  }
+                  highlightColor={'#7B7D81'}
+                  renderItem={_renderNumberItems}
                   onValueChange={(data, selectedIndex) => this.setState({ hoursIndex: selectedIndex })}
                 />
               </View>
+              <View style={styles.timeColon}>
+                <Text>:</Text>
+              </View>
               <View
-                style={styles.PickerWrapperView}
+                style={styles.pickerWrapperView}
               >
                 <ScrollPicker
                   dataSource={minsStrings}
                   selectedIndex={minutesIndex}
                   itemHeight={30}
                   wrapperHeight={75}
-                  highlightColor={'#d8d8d8'}
-                  renderItem={(data) => (
-                    <View>
-                        <Text >{data}</Text>
-                    </View>
-                    )
-                  }
+                  highlightColor={'#7B7D81'}
+                  renderItem={_renderNumberItems}
                   onValueChange={(data, selectedIndex) => this.setState({ minutesIndex: selectedIndex })}
                 />
               </View>
@@ -140,30 +151,49 @@ export default class extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
   },
   dialogContainer: {
     zIndex: 10,
     elevation: 10,
   },
   dialogStyle: {
-    backgroundColor: '#F7F7F8',
-    justifyContent: 'center',
+    backgroundColor: '#fafafa',
     alignItems: 'center',
+    width: '60%',
+    height: '35%',
   },
   dialogContent: {
-    backgroundColor: '#F7F7F8',
-    width: '75%',
-    height: '30%',
+    backgroundColor: '#fafafa',
+    width: '80%',
+    height: '70%',
   },
-  dialogInnerView: {
+  dialogInnerPickersView: {
     flex: 1,
     flexDirection: 'row',
     width: '100%',
+    alignItems: 'center',
   },
-  PickerWrapperView: {
+  pickerWrapperView: {
+    flex: 3,
+    height: 75,
+    justifyContent: 'center',
+  },
+  timeColon: {
     flex: 1,
     height: 75,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  selectedNumber: {
+    fontSize: 20,
+    color: 'black',
+  },
+  nonSelectedNumber: {
+    fontSize: 20,
+    color: '#DDD',
+  },
+  actionText: {
+    fontSize: 12,
+    color: '#2370DF',
   },
 });
